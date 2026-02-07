@@ -1,0 +1,46 @@
+# 依赖项
+node_modules/
+venv/
+env/
+
+# 编译产物
+dist/
+build/
+*.pyc
+__pycache__/
+
+# 配置文件
+.env
+.env.local
+.env.*.local
+
+# 日志文件
+logs/
+*.log
+
+# 编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统文件
+Thumbs.db
+.DS_Store
+
+# 测试文件
+coverage/
+
+# 临时文件
+*.tmp
+*.temp
+.cache/
+
+# 数据库文件
+*.db
+*.sqlite3
+
+# 其他
+debug_log.txt
+cache

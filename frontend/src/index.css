@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apple Design System Base Styles */
+body {
+  @apply bg-background text-text font-sans antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold leading-tight;
+}
+
+h1 {
+  @apply text-4xl sm:text-5xl md:text-6xl;
+}
+
+h2 {
+  @apply text-3xl sm:text-4xl md:text-5xl;
+}
+
+h3 {
+  @apply text-2xl sm:text-3xl;
+}
+
+h4 {
+  @apply text-xl sm:text-2xl;
+}
+
+/* Glass Morphism Effect */
+.glass {
+  @apply bg-white bg-opacity-80 backdrop-blur-md border border-white border-opacity-20 shadow-sm;
+}
+
+.glass-dark {
+  @apply bg-black bg-opacity-20 backdrop-blur-md border border-black border-opacity-10 shadow-sm;
+}
+
+/* Card Styles */
+.card {
+  @apply bg-card rounded-apple shadow-apple border border-border p-6 transition-all duration-300 hover:shadow-apple-hover hover:bg-cardHover;
+}
+
+.card-sm {
+  @apply bg-card rounded-apple-sm shadow-apple border border-border p-4 transition-all duration-300 hover:shadow-apple-hover hover:bg-cardHover;
+}
+
+/* Button Styles */
+.btn {
+  @apply px-6 py-3 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  @apply bg-primary text-white hover:bg-primaryHover;
+}
+
+.btn-primary:active {
+  background-color: #0066cc;
+}
+
+.btn-secondary {
+  @apply bg-backgroundTertiary text-text hover:bg-backgroundSecondary;
+}
+
+.btn-secondary:active {
+  background-color: #f2f2f7;
+}
+
+.btn-danger {
+  @apply bg-error text-white hover:bg-error hover:bg-opacity-90;
+}
+
+.btn-danger:active {
+  background-color: rgba(255, 59, 48, 0.8);
+}
+
+.btn-outline {
+  @apply bg-transparent border border-border text-text hover:bg-backgroundTertiary;
+}
+
+.btn-outline:active {
+  background-color: #ffffff;
+}
+
+/* Input Styles */
+.input {
+  @apply w-full px-4 py-3 rounded-apple-sm border border-border bg-backgroundSecondary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary transition-all duration-300;
+}
+
+/* Textarea Styles */
+.textarea {
+  @apply w-full px-4 py-3 rounded-apple-sm border border-border bg-backgroundSecondary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary transition-all duration-300 resize-none;
+}
+
+/* Loading Spinner */
+.spinner {
+  @apply animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary;
+}
+
+.spinner-lg {
+  @apply animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-primary;
+}
+
+/* Progress Bar */
+.progress-bar {
+  @apply h-2 bg-backgroundTertiary rounded-full overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply h-full bg-primary rounded-full transition-all duration-300;
+}
+
+/* Badge */
+.badge {
+  @apply px-3 py-1 rounded-full text-xs font-medium;
+}
+
+.badge-success {
+  @apply bg-accent bg-opacity-20 text-accent;
+}
+
+.badge-warning {
+  @apply bg-warning bg-opacity-20 text-warning;
+}
+
+.badge-error {
+  @apply bg-error bg-opacity-20 text-error;
+}
+
+/* Divider */
+.divider {
+  @apply h-px bg-borderSecondary my-6;
+}
+
+/* List Styles */
+.list-item {
+  @apply flex items-center py-3 border-b border-borderSecondary;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+/* Navigation */
+.nav-item {
+  @apply px-3 py-2 rounded-apple-sm transition-all duration-300 hover:bg-backgroundTertiary;
+}
+
+.nav-item-active {
+  @apply bg-primary bg-opacity-10 text-primary font-medium;
+}
+
+/* Tooltip */
+.tooltip {
+  @apply absolute z-10 px-3 py-2 text-sm font-medium text-white bg-text rounded-apple-sm shadow-lg opacity-0 invisible transition-all duration-300;
+  pointer-events: none;
+}
+
+.tooltip::after {
+  content: '';
+  @apply absolute top-1/2 left-full transform -translate-y-1/2 border-4 border-transparent;
+  border-left-color: #1d1d1f;
+}
+
+.tooltip-left::after {
+  content: '';
+  @apply absolute top-1/2 right-full transform -translate-y-1/2 border-4 border-transparent;
+  border-right-color: #1d1d1f;
+}
+
+.tooltip-top::after {
+  content: '';
+  @apply absolute bottom-full left-1/2 transform -translate-x-1/2 border-4 border-transparent;
+  border-bottom-color: #1d1d1f;
+}
+
+.tooltip-bottom::after {
+  content: '';
+  @apply absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent;
+  border-top-color: #1d1d1f;
+}
+
+/* Hover states for tooltip */
+.has-tooltip:hover .tooltip {
+  @apply opacity-100 visible;
+}
+
+/* Transition Effects */
+.fade-in {
+  @apply animate-fade-in;
+}
+
+.slide-up {
+  @apply animate-slide-up;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-backgroundTertiary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-borderSecondary;
+}

@@ -1,0 +1,40 @@
+# Flask API dependencies
+flask
+flask-cors
+flask-sqlalchemy
+pymysql
+python-dotenv
+
+# LLM dependencies
+langchain
+langchain-openai
+langchain-huggingface
+langchain-community
+langchain-core
+
+# HuggingFace dependencies
+transformers
+sentence-transformers
+
+# Vector storage
+faiss-cpu
+
+# HTTP requests
+requests
+urllib3
+
+# Retry logic
+tenacity
+
+# Document processing
+unstructured
+PyPDF2
+python-docx
+pdf2docx
+arxiv
+docx2txt
+textract
+
+# Misc
+numpy
+python-multipart

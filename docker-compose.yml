@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - ./database:/app/database
+      - ./reports:/app/reports
+      - ./templates:/app/templates
+      - /home/ubuntu/report_make/cache/huggingface/models--sentence-transformers--all-MiniLM-L6-v2:/app/cache/huggingface/models--sentence-transformers--all-MiniLM-L6-v2
+    environment:
+      - FLASK_ENV=production
+      - DEBUG=False
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html

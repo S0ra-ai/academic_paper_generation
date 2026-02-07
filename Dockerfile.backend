@@ -1,0 +1,17 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# 安装系统依赖，包括antiword
+RUN apt-get update && apt-get install -y \
+    antiword \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/ .
+
+EXPOSE 8080
+
+CMD ["python", "main.py"]
