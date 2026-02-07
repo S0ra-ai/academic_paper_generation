@@ -239,4 +239,244 @@ docker-compose stop frontend
 - **API使用**：使用第三方API时应遵守相应服务提供商的使用条款
 
 
+# Academic Paper Report Generation System
+
+A comprehensive academic paper report generation system, including backend API services and frontend web application, supporting AI-based automatic generation of academic paper reports.
+
+## Project Introduction
+
+This project aims to help researchers quickly generate high-quality academic papers or reports by integrating multiple academic literature retrieval sources and large language models (LLMs), combined with Retrieval-Augmented Generation (RAG) technology, to achieve end-to-end automation from literature collection to report writing.
+
+- **Advanced Academic Literature Search**: Integrates multiple authoritative academic platforms such as Crossref, OpenAlex, ArXiv, and Semantic Scholar, supporting concurrent retrieval and intelligent filtering
+- **Retrieval-Augmented Generation (RAG)**: Combines academic literature retrieval results with local knowledge bases to significantly improve the accuracy and relevance of report content
+- **Intelligent Report Generation**: LLM-based report content generation and organization, supporting multiple languages
+- **Local Knowledge Base Management**: Supports loading, automatic segmentation, and vector indexing of documents in formats such as PDF and DOCX
+- **User-Friendly Web Interface**: Intuitive report generation and management interface
+- **Docker Containerized Deployment**: Simplifies deployment and environment configuration
+
+## Technology Stack
+
+### Backend Core Technologies
+- **Python 3.9+**: Main development language
+- **Flask 2.0+**: Web framework providing RESTful API
+- **Transformers**: Local Embedding model supporting document vectorization
+- **LangChain**: RAG technology implementation, integrating retrieval results with knowledge base
+- **OpenRouter API**: Large language model service supporting intelligent content generation
+- **Multi-threaded Concurrency**: Implementation of efficient parallel retrieval of academic literature
+- **Vector Database**: Supports efficient storage and retrieval of local knowledge bases
+
+### Frontend Technologies
+- **Vue.js 3**: Modern frontend framework
+- **Vite**: Fast build tool
+- **Tailwind CSS**: Responsive UI design
+
+### Deployment Technologies
+- **Docker**: Containerized deployment
+- **Docker Compose**: Multi-service coordination management
+
+## Project Structure
+
+```
+academic_paper_generation/
+├── backend/           # Backend API services
+│   ├── app/           # Application core code
+│   │   ├── api/       # API routes
+│   │   ├── services/  # Business logic services
+│   │   └── app.py     # Flask application main file
+│   ├── config/        # Configuration files
+│   ├── database/      # Database files
+│   ├── requirements.txt  # Python dependencies
+│   └── README.md      # Backend service instructions
+├── frontend/          # Frontend web application
+│   ├── src/           # Source code
+│   ├── public/        # Static resources
+│   ├── package.json   # Frontend dependencies
+│   └── vite.config.js # Vite configuration
+├── docker-compose.yml # Docker Compose configuration
+├── Dockerfile.backend # Backend Dockerfile
+├── Dockerfile.frontend # Frontend Dockerfile
+└── README.md          # Project documentation
+```
+
+## Quick Start
+
+### Method 1: Using Docker Compose (Recommended)
+
+1. **Clone the Repository**
+
+```bash
+git clone https://github.com/S0ra-ai/report_make.git
+cd report_make
+```
+
+2. **Configure Environment Variables**
+
+Copy and edit the backend environment variable file:
+
+```bash
+cp backend/.env.example backend/.env
+# Edit backend/.env file, fill in API keys and other configurations
+```
+
+3. **Start Services**
+
+```bash
+docker-compose up -d
+```
+
+Services will start at the following addresses:
+- Frontend application: http://localhost:3000
+- Backend API: http://localhost:5000
+
+### Method 2: Local Development Environment
+
+#### 1. Start Backend Service
+
+```bash
+cd backend
+pip install -r requirements.txt
+# Configure .env file
+python app/app.py
+```
+
+#### 2. Start Frontend Application
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## Main Features
+
+### 1. RAG-Driven Academic Report Generation
+
+- **Intelligent Literature Retrieval**: Input research topic, the system automatically retrieves relevant literature from multiple academic platforms
+- **Knowledge Integration**: Deeply integrates academic literature retrieval results with local knowledge base content
+- **Structured Reports**: Generates logically clear, content-rich structured reports based on integrated knowledge
+- **Multi-language Support**: Supports report generation in multiple languages including Chinese and English
+- **Content Accuracy**: Significantly improves the accuracy and academic relevance of generated content through RAG technology
+
+### 2. Advanced Academic Literature Search System
+
+- **Multi-source Integration**: Simultaneously integrates authoritative academic platforms such as Crossref, OpenAlex, ArXiv, and Semantic Scholar
+- **Concurrent Retrieval**: Multi-threaded parallel retrieval, greatly improving search efficiency
+- **Intelligent Processing**: Automatic filtering, sorting, and deduplication of retrieval results
+- **Comprehensive Coverage**: Ensures access to the most relevant and latest academic research results
+- **Standardized Processing**: Unifies literature formats from different platforms for subsequent analysis and use
+
+### 3. Intelligent Local Knowledge Base Management
+
+- **Multi-format Support**: Compatible with multiple document formats such as PDF and DOCX
+- **Automatic Processing**: Intelligent document segmentation, text extraction, and vector indexing
+- **Efficient Retrieval**: Semantic-based fast document content retrieval
+- **Continuous Optimization**: Supports dynamic updating and expansion of knowledge base
+- **Secure Storage**: Local storage ensures data privacy and security
+
+### 4. Complete Report Management Features
+
+- **History Records**: View and manage all historically generated reports
+- **Content Preview**: Online preview of report content
+- **Convenient Download**: Supports report export and saving
+- **Search and Filter**: Quickly find reports on specific topics
+
+## API Documentation
+
+The backend API service provides the following main endpoints:
+
+### Health Check
+- **GET /health** - Check API service status
+
+### Report Generation
+- **POST /api/generate-report** - Generate academic report
+  - Request body: `{"query": "Research topic", "limit": 6, "language": "en"}`
+  - Response: Generated report content
+
+### Report Management
+- **GET /api/reports** - Get report list
+- **GET /api/reports/{id}** - Get report details
+- **DELETE /api/reports/{id}** - Delete report
+
+For detailed API documentation, please refer to the [Backend Service Instructions](backend/README.md).
+
+## Configuration Instructions
+
+### Backend Configuration
+
+Main configuration items (located in `backend/.env`):
+
+- `OPENROUTER_API_KEY` - OpenRouter API key
+- `SERPAPI_KEY` - SerpAPI key (for certain retrieval functions)
+- `ACADEMIC_EMAIL` - Academic email (for API request identification)
+- `LLM_MODEL_NAME` - LLM model name to use
+- `KNOWLEDGE_DIR` - Local knowledge base directory
+- `SAVE_DIR` - Report saving directory
+
+### Frontend Configuration
+
+Frontend configuration is mainly managed through environment variables and configuration files:
+
+- `VITE_API_BASE_URL` - Backend API base URL
+
+## Deployment Instructions
+
+### Docker Deployment
+
+The project provides complete Docker configuration, supporting one-click deployment:
+
+```bash
+# Build and start all services
+docker-compose up -d --build
+
+# Build and start backend service separately
+docker-compose up -d --build backend
+
+# Build and start frontend service separately
+docker-compose up -d --build frontend
+
+# View service status
+docker-compose ps
+
+# Stop backend service
+docker-compose stop backend
+
+# Stop frontend service
+docker-compose stop frontend
+```
+
+### Production Environment Deployment
+
+1. Ensure environment variable configurations in `docker-compose.yml` are modified
+2. Configure appropriate network and port mappings
+3. Consider using HTTPS certificates to protect services
+4. Regularly back up database and report files
+
+## Development Guide
+
+### Backend Development
+
+1. Install dependencies: `pip install -r requirements.txt`
+2. Run tests: `python -m pytest`
+3. Start development server: `python app/app.py`
+
+### Frontend Development
+
+1. Install dependencies: `npm install`
+2. Start development server: `npm run dev`
+3. Build production version: `npm run build`
+
+## Notes
+
+1. **API Keys**: Ensure correct configuration of OpenRouter API and SERPAPI keys, otherwise report generation functionality will not work
+2. **Resource Requirements**: Running local Embedding models requires certain memory resources (at least 8GB RAM recommended)
+3. **Network Connection**: Academic literature retrieval requires a stable network connection
+
+## Disclaimer
+
+This project is for learning and reference purposes only, aiming to help researchers understand the automated process of academic report generation and related technical implementations.
+
+- **Usage Responsibility**: All impacts resulting from the use of this project are unrelated to the project authors
+- **Compliance**: Users should ensure compliance with relevant laws, regulations, and academic norms
+- **API Usage**: When using third-party APIs, users should comply with the terms of service of the corresponding service providers
+
 
