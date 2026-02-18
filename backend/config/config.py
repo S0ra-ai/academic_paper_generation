@@ -27,7 +27,7 @@ class Config:
     LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME', 'google/gemini-3-pro-preview')
     LLM_TEMPERATURE = float(os.environ.get('LLM_TEMPERATURE', '0.0'))
     LLM_MAX_TOKENS = int(os.environ.get('LLM_MAX_TOKENS', '32768'))
-    LLM_TIMEOUT = int(os.environ.get('LLM_TIMEOUT', '300'))  # 增加到5分钟
+    LLM_TIMEOUT = int(os.environ.get('LLM_TIMEOUT', '600'))  # 增加到10分钟
     
     # 本地文档配置
     KNOWLEDGE_DIR = os.environ.get('KNOWLEDGE_DIR', './database')

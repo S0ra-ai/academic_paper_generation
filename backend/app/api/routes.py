@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 
 from app.services.report_generator import ReportGenerator
 from app.services.local_doc_service import LocalDocManager
+from app.services.code_analyzer import CodeAnalyzer
 from config.config import Config
 
 # 创建API蓝图
@@ -287,6 +288,145 @@ def get_templates():
         
     except Exception as e:
         logging.error(f"❌ 获取模板列表失败: {e}")
+        return jsonify({
+            'status': 'error',
+            'message': f'服务器内部错误: {str(e)}'
+        }), 500
+
+
+@api_bp.route('/generate-code-report', methods=['POST'])
+def generate_code_report():
+    """
+    生成计算机专业论文报告的API端点
+    ---
+    parameters:
+      - name: project_name
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            project_name: {
+              type: string,
+              description: '项目名称'
+            }
+    responses:
+      200:
+        description: 报告生成成功
+        schema:
+          type: object
+          properties:
+            status: { type: string, description: '生成状态' }
+            filename: { type: string, description: '生成的文件名' }
+            content: { type: string, description: '报告内容' }
+            word_count: { type: integer, description: '报告字数' }
+      400:
+        description: 请求参数错误
+      500:
+        description: 服务器内部错误
+    """
+    try:
+        # 打印请求信息以调试
+        logging.info(f"📥 请求类型: {request.content_type}")
+        logging.info(f"📥 请求方法: {request.method}")
+        logging.info(f"📥 请求表单: {list(request.form.items())}")
+        logging.info(f"📥 请求文件: {list(request.files.keys())}")
+        
+        # 统一处理project_name获取
+        project_name = request.form.get('project_name', '')
+        if not project_name and request.is_json:
+            data = request.get_json()
+            project_name = data.get('project_name', '')
+        project_name = project_name.strip()
+        
+        # 处理模板参数
+        template = request.form.get('template', '')
+        if not template and request.is_json:
+            data = request.get_json()
+            template = data.get('template', '')
+        template = template.strip()
+        
+        logging.info(f"📥 获取到的project_name: {project_name}")
+        
+        # 初始化变量
+        uploaded_files = []
+        temp_files = []
+        code_analyzer = CodeAnalyzer()
+        
+        # 处理文件上传
+        if 'files' in request.files:
+            files = request.files.getlist('files')
+            logging.info(f"📥 接收到 {len(files)} 个文件")
+            
+            # 确保代码分析目录存在
+            code_dir = os.path.join(Config.KNOWLEDGE_DIR, 'code')
+            os.makedirs(code_dir, exist_ok=True)
+            
+            # 保存上传的文件
+            import time
+            for file in files:
+                if file.filename:
+                    # 保持原始文件名，只移除最危险的字符（路径分隔符、控制字符等）
+                    import re
+                    filename = file.filename
+                    # 移除路径分隔符和空字符
+                    filename = re.sub(r'[\/\x00]', '_', filename)
+                    # 移除控制字符
+                    filename = re.sub(r'[\x01-\x1f\x7f]', '', filename)
+                    # 确保文件名不为空
+                    filename = filename.strip()
+                    if not filename:
+                        filename = f"upload_{int(time.time())}"
+                    
+                    # 处理只有扩展名的情况，如'java'，添加时间戳前缀
+                    _, ext = os.path.splitext(filename)
+                    if not ext and len(filename) <= 5:
+                        # 如果没有点号且长度较短，视为只有扩展名
+                        timestamp = int(time.time())
+                        filename = f"upload_{timestamp}.{filename}"
+                    
+                    file_path = os.path.join(code_dir, filename)
+                    
+                    # 保存文件
+                    file.save(file_path)
+                    uploaded_files.append(filename)
+                    logging.info(f"✅ 文件已保存: {file_path}")
+                    
+                    # 记录临时文件路径
+                    temp_files.append(file_path)
+        
+        if not project_name:
+            return jsonify({
+                'status': 'error',
+                'message': '项目名称不能为空'
+            }), 400
+        
+        if not uploaded_files:
+            return jsonify({
+                'status': 'error',
+                'message': '请上传代码工程文件'
+            }), 400
+        
+        # 分析代码并生成报告
+        result = code_analyzer.analyze_and_generate_report(project_name, uploaded_files, template=template)
+        
+        # 清理临时文件
+        try:
+            # 删除临时文件
+            for temp_file in temp_files:
+                if os.path.exists(temp_file):
+                    os.remove(temp_file)
+                    logging.info(f"🗑️  已删除临时文件: {temp_file}")
+        except Exception as e:
+            logging.error(f"⚠️  清理资源时出错: {e}")
+        
+        if result['status'] == 'success':
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 500
+            
+    except Exception as e:
+        logging.error(f"API 错误: {e}")
         return jsonify({
             'status': 'error',
             'message': f'服务器内部错误: {str(e)}'

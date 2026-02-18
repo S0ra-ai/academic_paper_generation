@@ -33,7 +33,7 @@ python-docx
 pdf2docx
 arxiv
 docx2txt
-textract
+# textract
 
 # Misc
 numpy

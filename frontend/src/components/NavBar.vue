@@ -6,7 +6,7 @@
           <div class="w-10 h-10 rounded-apple flex items-center justify-center bg-primary text-white font-bold shadow-sm">
             R
           </div>
-          <span class="text-xl font-bold">实验报告生成器</span>
+          <span class="text-xl font-bold">智研</span>
         </router-link>
         
         <!-- Desktop Navigation -->

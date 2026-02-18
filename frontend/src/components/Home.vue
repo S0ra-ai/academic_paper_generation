@@ -12,7 +12,7 @@
         class="text-center py-16 md:py-24"
       >
       <h1 class="text-4xl md:text-5xl font-bold mb-8">
-        智能实验报告生成器
+        智研
       </h1>
       <p class="text-xl md:text-2xl text-textSecondary max-w-3xl mx-auto mb-12">
         利用AI技术，快速生成专业、准确的实验报告，让科研工作更高效
@@ -25,8 +25,14 @@
           立即生成报告
         </router-link>
         <router-link
-          to="/reports"
+          to="/generate-code"
           class="btn btn-secondary"
+        >
+          计算机专业论文
+        </router-link>
+        <router-link
+          to="/reports"
+          class="btn btn-outline"
         >
           查看我的报告
         </router-link>
@@ -93,12 +99,20 @@
       <p class="text-xl text-textSecondary max-w-3xl mx-auto mb-10">
         体验AI驱动的实验报告生成，提升您的科研效率
       </p>
-      <router-link
-        to="/generate"
-        class="btn btn-primary shadow-apple"
-      >
-        开始生成报告
-      </router-link>
+      <div class="flex flex-col sm:flex-row justify-center gap-6">
+        <router-link
+          to="/generate"
+          class="btn btn-primary shadow-apple"
+        >
+          开始生成报告
+        </router-link>
+        <router-link
+          to="/generate-code"
+          class="btn btn-secondary"
+        >
+          计算机专业论文
+        </router-link>
+      </div>
     </section>
     </transition>
   </div>

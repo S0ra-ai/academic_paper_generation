@@ -237,7 +237,7 @@ docker-compose stop frontend
 
 1. Install dependencies: `pip install -r requirements.txt`
 2. Run tests: `python -m pytest`
-3. Start development server: `python app/app.py`
+3. Start development server: `python backend\main.py`
 
 #### Frontend Development
 
@@ -492,7 +492,7 @@ docker-compose stop frontend
 
 1. 安装依赖：`pip install -r requirements.txt`
 2. 运行测试：`python -m pytest`
-3. 启动开发服务器：`python app/app.py`
+3. 启动开发服务器：`python backend\main.py`
 
 #### 前端开发
 

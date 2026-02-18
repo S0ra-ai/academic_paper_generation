@@ -9,11 +9,24 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://127.0.0.1:8080',
         changeOrigin: true,
-        timeout: 300000, // 增加超时时间到5分钟，匹配前端axios的超时设置
+        timeout: 600000, // 增加超时时间到10分钟，匹配后端LLM_TIMEOUT设置
         secure: false,
         ws: true,
+        // 增加重连机制
+        onProxyReq: (proxyReq, req, res) => {
+          console.log('Proxying request:', req.method, req.url)
+        },
+        onProxyRes: (proxyRes, req, res) => {
+          console.log('Proxy response:', proxyRes.statusCode, req.url)
+        },
+        onError: (err, req, res) => {
+          console.error('Proxy error:', err.message, req.url)
+          // 返回504网关超时，而不是直接关闭连接
+          res.writeHead(504, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({ error: 'Gateway Timeout', message: '请求处理超时，请稍后重试' }))
+        }
       },
     },
     middleware: [history()],
@@ -24,9 +37,9 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://127.0.0.1:8080',
         changeOrigin: true,
-        timeout: 300000, // 增加超时时间到5分钟，匹配前端axios的超时设置
+        timeout: 600000, // 增加超时时间到10分钟，匹配后端LLM_TIMEOUT设置
         secure: false,
         ws: true,
         // 增加重连机制

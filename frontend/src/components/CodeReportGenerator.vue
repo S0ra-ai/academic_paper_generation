@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-4xl mx-auto px-6 py-8">
     <div>
-      <h1 class="text-4xl font-bold mb-8">生成实验报告</h1>
+      <h1 class="text-4xl font-bold mb-8">生成计算机专业论文</h1>
     </div>
 
     <div
@@ -12,7 +12,7 @@
         报告生成成功！
       </h3>
       <p class="text-green-700 mb-4">
-        您的实验报告已成功生成，报告ID：{{ reportId }}
+        您的计算机专业论文已成功生成，报告ID：{{ reportId }}
       </p>
       <router-link
         :to="`/reports/${reportId}`"
@@ -36,18 +36,18 @@
       @submit.prevent="handleSubmit"
       class="space-y-6"
     >
-      <!-- 研究主题 -->
+      <!-- 项目名称 -->
       <div>
-        <label for="topic" class="block text-sm font-medium mb-2">
-          研究主题
+        <label for="project_name" class="block text-sm font-medium mb-2">
+          项目名称
         </label>
         <input
           type="text"
-          id="topic"
-          name="topic"
-          v-model="formData.topic"
+          id="project_name"
+          name="project_name"
+          v-model="formData.project_name"
           class="input"
-          placeholder="请输入研究主题（例如：人工智能、量子计算等）"
+          placeholder="请输入项目名称"
           required
         />
       </div>
@@ -126,40 +126,78 @@
           </option>
         </select>
         <p class="text-xs text-textSecondary mt-1">
-          选择已上传的模板，生成报告将按照该模板格式
+          选择已上传的模板，生成的报告将按照模板格式
         </p>
       </div>
 
-      <!-- 文件上传（可选） -->
+      <!-- 代码工程文件上传 -->
       <div>
         <label class="block text-sm font-medium mb-2">
-          上传实验数据（可选）
+          上传代码工程文件
         </label>
         <div class="border-2 border-dashed border-borderSecondary rounded-apple p-8 text-center hover:border-primary transition-colors duration-300 hover:shadow-sm">
           <input
             type="file"
             class="hidden"
-            id="file-upload"
+            id="code-upload"
             multiple
-            @change="handleFileChange"
+            directory
+            webkitdirectory
+            @change="handleCodeFileChange"
+            accept=".java,.py"
           />
-          <label for="file-upload" class="cursor-pointer">
+          <label for="code-upload" class="cursor-pointer">
+            <div class="text-primary text-4xl mb-2">💻</div>
+            <p class="text-sm text-textSecondary mb-1">
+              点击或拖拽代码文件或目录到此处上传
+            </p>
+            <p class="text-xs text-textSecondary">
+              支持 Java (.java) 和 Python (.py) 文件，支持上传整个目录
+            </p>
+          </label>
+        </div>
+        <!-- 显示已选择的代码文件 -->
+        <div v-if="selectedCodeFiles.length > 0" class="mt-2">
+          <p class="text-sm font-medium mb-1">已选择 {{ selectedCodeFiles.length }} 个代码文件：</p>
+          <div class="max-h-60 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            <ul class="text-xs text-textSecondary">
+              <li v-for="(file, index) in selectedCodeFiles.slice(0, 25)" :key="index">{{ file.name }}</li>
+              <li v-if="selectedCodeFiles.length > 25" class="text-gray-500">... 还有 {{ selectedCodeFiles.length - 25 }} 个文件</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 本地参考文献上传 -->
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          上传本地参考文献（可选）
+        </label>
+        <div class="border-2 border-dashed border-borderSecondary rounded-apple p-8 text-center hover:border-primary transition-colors duration-300 hover:shadow-sm">
+          <input
+            type="file"
+            class="hidden"
+            id="data-upload"
+            multiple
+            @change="handleDataFileChange"
+          />
+          <label for="data-upload" class="cursor-pointer">
             <div class="text-primary text-4xl mb-2">📁</div>
             <p class="text-sm text-textSecondary mb-1">
-              点击或拖拽文件到此处上传
+              点击或拖拽本地参考文献文件到此处上传
             </p>
             <p class="text-xs text-textSecondary">
               支持 PDF、Word、Excel、CSV 等格式
             </p>
           </label>
         </div>
-        <!-- 显示已选择的文件 -->
-        <div v-if="selectedFiles.length > 0" class="mt-2">
-          <p class="text-sm font-medium mb-1">已选择 {{ selectedFiles.length }} 个文件：</p>
+        <!-- 显示已选择的本地参考文献文件 -->
+        <div v-if="selectedDataFiles.length > 0" class="mt-2">
+          <p class="text-sm font-medium mb-1">已选择 {{ selectedDataFiles.length }} 个本地参考文献文件：</p>
           <div class="max-h-60 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             <ul class="text-xs text-textSecondary">
-              <li v-for="(file, index) in selectedFiles.slice(0, 25)" :key="index">{{ file.name }}</li>
-              <li v-if="selectedFiles.length > 25" class="text-gray-500">... 还有 {{ selectedFiles.length - 25 }} 个文件</li>
+              <li v-for="(file, index) in selectedDataFiles.slice(0, 25)" :key="index">{{ file.name }}</li>
+              <li v-if="selectedDataFiles.length > 25" class="text-gray-500">... 还有 {{ selectedDataFiles.length - 25 }} 个文件</li>
             </ul>
           </div>
         </div>
@@ -176,7 +214,7 @@
             <div class="spinner"></div>
             <span>生成中...</span>
           </div>
-          <span v-else>生成报告</span>
+          <span v-else>生成论文</span>
         </button>
       </div>
     </form>
@@ -185,10 +223,11 @@
     <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-apple shadow-sm">
       <h4 class="font-medium text-blue-800 mb-2">💡 提示</h4>
       <ul class="text-sm text-blue-700 space-y-1">
-        <li>• 请尽可能详细地描述实验信息，以获得更准确的报告</li>
-        <li>• 支持上传实验原始数据文件，AI将自动分析并整合到报告中</li>
-        <li>• 可上传自定义报告模板，生成的报告将按照模板格式编写</li>
-        <li>• 生成报告可能需要几分钟时间，请耐心等待</li>
+        <li>• 请上传Java或Python代码文件，系统将自动分析代码结构</li>
+        <li>• 项目名称将作为论文的标题和文件名</li>
+        <li>• 可上传自定义报告模板，生成的论文将按照模板格式编写</li>
+        <li>• 生成论文可能需要几分钟时间，请耐心等待</li>
+        <li>• 生成的论文将包含代码分析、架构设计、核心功能等章节</li>
       </ul>
     </div>
   </div>
@@ -199,14 +238,15 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
 const formData = ref({
-  topic: '',
+  project_name: '',
   template: ''
 })
 const loading = ref(false)
 const success = ref(false)
 const error = ref('')
 const reportId = ref(null)
-const selectedFiles = ref([])
+const selectedCodeFiles = ref([])
+const selectedDataFiles = ref([])
 
 // 模板相关状态
 const selectedTemplate = ref(null)
@@ -239,9 +279,14 @@ const handleChange = (e) => {
   formData.value[name] = value
 }
 
-const handleFileChange = (e) => {
+const handleCodeFileChange = (e) => {
   const files = Array.from(e.target.files)
-  selectedFiles.value = files
+  selectedCodeFiles.value = files
+}
+
+const handleDataFileChange = (e) => {
+  const files = Array.from(e.target.files)
+  selectedDataFiles.value = files
 }
 
 // 处理模板文件选择
@@ -309,32 +354,33 @@ const handleSubmit = async (e) => {
   success.value = false
 
   try {
-    // 使用后端实际的API端点和请求格式
-    let response
-    
-    if (selectedFiles.value.length > 0) {
-      // 有文件需要上传，使用FormData
-      const formDataToSend = new FormData()
-      formDataToSend.append('topic', formData.value.topic)
-      formDataToSend.append('template', formData.value.template)
-      
-      selectedFiles.value.forEach((file, index) => {
-        formDataToSend.append('files', file)
-      })
-      
-      response = await axios.post(`${API_URL}/generate-report`, formDataToSend, {
-        // 不要手动设置Content-Type，让axios自动处理multipart/form-data的边界
-        timeout: 300000 // 添加5分钟超时设置，确保有足够时间生成报告
-      })
-    } else {
-      // 没有文件需要上传，使用JSON格式
-      response = await axios.post(`${API_URL}/generate-report`, {
-        topic: formData.value.topic,
-        template: formData.value.template
-      }, {
-        timeout: 300000 // 添加5分钟超时设置，确保有足够时间生成报告
-      })
+    // 检查是否上传了代码文件
+    if (selectedCodeFiles.value.length === 0) {
+      error.value = '请上传代码工程文件'
+      loading.value = false
+      return
     }
+
+    // 使用后端实际的API端点和请求格式
+    const formDataToSend = new FormData()
+    formDataToSend.append('project_name', formData.value.project_name)
+    formDataToSend.append('template', formData.value.template)
+    
+    // 上传代码文件
+    selectedCodeFiles.value.forEach((file, index) => {
+      formDataToSend.append('files', file)
+    })
+    
+    // 上传实验数据文件
+    selectedDataFiles.value.forEach((file, index) => {
+      formDataToSend.append('files', file)
+    })
+    
+    // 发送请求
+    const response = await axios.post(`${API_URL}/generate-code-report`, formDataToSend, {
+      // 不要手动设置Content-Type，让axios自动处理multipart/form-data的边界
+      timeout: 600000 // 添加10分钟超时设置，确保有足够时间生成报告
+    })
     
     // 获取报告数据
     const reportData = response.data
@@ -345,7 +391,7 @@ const handleSubmit = async (e) => {
     // 创建新报告对象
     const newReport = {
       id: newReportId,
-      title: reportData.filename ? reportData.filename.replace('.md', '') : `报告 ${newReportId}`,
+      title: reportData.filename ? reportData.filename.replace('.md', '') : `代码报告 ${newReportId}`,
       content: typeof reportData.content === 'string' ? reportData.content : '# 报告内容\n\n生成的报告内容为空',
       word_count: typeof reportData.word_count === 'number' ? reportData.word_count : 0,
       created_at: new Date().toISOString(),
@@ -367,10 +413,11 @@ const handleSubmit = async (e) => {
     
     // 重置表单
     formData.value = {
-      topic: '',
+      project_name: '',
       template: ''
     }
-    selectedFiles.value = []
+    selectedCodeFiles.value = []
+    selectedDataFiles.value = []
     clearTemplate()
   } catch (err) {
     // 详细的错误信息处理

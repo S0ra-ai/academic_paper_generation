@@ -96,7 +96,7 @@ function NavBar() {
             <div className="w-10 h-10 rounded-apple flex items-center justify-center bg-primary text-white font-bold shadow-sm">
               R
             </div>
-            <span className="text-xl font-bold">实验报告生成器</span>
+            <span className="text-xl font-bold">智研</span>
           </Link>
           
           {/* Desktop Navigation */}
@@ -166,7 +166,7 @@ function Footer() {
               <div className="w-10 h-10 rounded-apple flex items-center justify-center bg-primary text-white font-bold shadow-sm">
                 R
               </div>
-              <span className="text-xl font-bold">实验报告生成器</span>
+              <span className="text-xl font-bold">智研</span>
             </div>
             <p className="text-textSecondary mb-4">
               智能生成实验报告，提高科研效率
