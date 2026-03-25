@@ -31,6 +31,11 @@ Thumbs.db
 
 # 测试文件
 coverage/
+tests/
+*.test.js
+*.test.py
+test_*.py
+__tests__/
 
 # 临时文件
 *.tmp

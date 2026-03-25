@@ -38,3 +38,7 @@ textract
 # Misc
 numpy
 python-multipart
+
+# NLP for content safety
+jieba
+snownlp

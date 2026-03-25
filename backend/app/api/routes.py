@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from app.services.report_generator import ReportGenerator
 from app.services.local_doc_service import LocalDocManager
 from config.config import Config
+from app.utils.content_safety import check_content_safety
 
 # 创建API蓝图
 api_bp = Blueprint('api', __name__)
@@ -143,6 +144,23 @@ def generate_report():
                 'status': 'error',
                 'message': '研究主题不能为空'
             }), 400
+        
+        # 安全检查：检查输入内容
+        safety_result = check_content_safety(topic, "input")
+        
+        if not safety_result.is_safe:
+            logging.warning(f"安全检查未通过: {safety_result.message}")
+            return jsonify({
+                'status': 'rejected',
+                'message': safety_result.message,
+                'risk_level': safety_result.risk_level,
+                'action': safety_result.action,
+                'detected_keywords': safety_result.detected_keywords,
+                'categories': safety_result.categories
+            }), 403
+        
+        if safety_result.action == 'warn':
+            logging.warning(f"安全警告: {safety_result.message}")
         
         # 生成报告，传入临时知识库实例和模板参数
         result = report_generator.generate_report(topic, local_rag=local_doc_manager, template=template)
