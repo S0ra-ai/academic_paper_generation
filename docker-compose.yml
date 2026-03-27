@@ -12,12 +12,11 @@ services:
       - ./database:/app/database
       - ./reports:/app/reports
       - ./templates:/app/templates
-      - /home/ubuntu/report_make/cache/huggingface/models--sentence-transformers--all-MiniLM-L6-v2:/app/cache/huggingface/models--sentence-transformers--all-MiniLM-L6-v2
+      - ./backend/cache/huggingface:/app/cache/huggingface
     environment:
       - FLASK_ENV=production
       - DEBUG=False
     restart: always
-
   frontend:
     build:
       context: .
@@ -27,5 +26,3 @@ services:
     depends_on:
       - backend
     restart: always
-    volumes:
-      - ./frontend/dist:/usr/share/nginx/html

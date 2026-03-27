@@ -22,11 +22,11 @@
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "tailwindcss": "^2.2.19",
+    "vite": "^2.9.16",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "vite": "^2.9.16"
+    "eslint": "^7.32.0"
   }
 }
